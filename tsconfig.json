@@ -1,0 +1,13 @@
+{
+  "include": ["index.ts"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "declaration": true,
+    "lib": ["ES2020"],
+    "module": "CommonJS",
+    "target": "ES2015",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

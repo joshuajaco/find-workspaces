@@ -1,0 +1,29 @@
+{
+  "name": "find-workspaces",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "LICENSE"
+  ],
+  "scripts": {
+    "format": "prettier -w --ignore-path .gitignore .",
+    "lint": "prettier -c --ignore-path .gitignore .",
+    "test": "nyc ts-node tests",
+    "build": "rimraf dist && tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "globby": "^11.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.3.0",
+    "typescript": "^4.4.4"
+  }
+}
