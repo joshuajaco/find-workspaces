@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.js",
   "license": "MIT",
+  "repository": "joshuajaco/find-workspaces",
   "files": [
     "dist/",
     "LICENSE"
@@ -13,6 +14,7 @@
     "lint": "prettier -c --ignore-path .gitignore .",
     "test": "nyc ts-node tests",
     "build": "rimraf dist && tsc",
+    "coverage": "mkdir -p coverage && touch ./coverage/lcov.info && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
@@ -25,5 +27,8 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.3.0",
     "typescript": "^4.4.4"
+  },
+  "engines": {
+    "node": ">= 12.22.0"
   }
 }
