@@ -13,6 +13,7 @@
     "lint": "prettier -c --ignore-path .gitignore .",
     "test": "nyc ts-node tests",
     "build": "rimraf dist && tsc",
+    "coverage": "mkdir -p coverage && touch ./coverage/lcov.info && nyc report --reporter=text-lcov > ./coverage/lcov.info",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
