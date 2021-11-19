@@ -2,6 +2,15 @@ import assert from "assert";
 import { resolve, join } from "path";
 import { findRoot } from "../index";
 
+assert.deepEqual(findRoot(join("."), { stopDir: "bla" }), null);
+
+assert.deepEqual(
+  findRoot(join("fixtures", "bolt", "packages", "a"), {
+    stopDir: join("fixtures", "bolt", "packages"),
+  }),
+  null
+);
+
 assert.equal(findRoot(), null);
 
 assert.deepEqual(findRoot(join("fixtures", "bolt")), {
@@ -33,7 +42,7 @@ assert.deepEqual(findRoot(join("fixtures", "yarn-npm-with-packages")), {
   globs: ["packages/*"],
 });
 
-assert.deepEqual(findRoot(join("fixtures", "yarn-npm", "a", "b", "c")), {
+assert.deepEqual(findRoot(join("fixtures", "yarn-npm", "packages", "a", "b")), {
   location: resolve("fixtures", "yarn-npm"),
   globs: ["packages/*"],
 });
