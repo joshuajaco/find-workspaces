@@ -1,4 +1,5 @@
 import { resolve } from "path";
+import os from "os";
 import globby from "globby";
 
 export type WorkspacesRoot = { location: string; globs: string[] };
@@ -11,17 +12,23 @@ type Cache = {
 
 const cache: Cache = { root: {}, workspaces: {} };
 
-export function findRoot(dirname?: string) {
+type Options = { stopDir?: string };
+
+export function findRoot(dirname?: string, options: Options = {}) {
   const dir = dirname ? resolve(dirname) : process.cwd();
-  return findWorkspacesRoot(dir);
+  const stopDir = options.stopDir ? resolve(options.stopDir) : os.homedir();
+  return findWorkspacesRoot(dir, stopDir);
 }
 
 findRoot.clearCache = () => {
   cache.root = {};
 };
 
-export function findWorkspaces(dirname?: string): Workspace[] | null {
-  const root = findRoot(dirname);
+export function findWorkspaces(
+  dirname?: string,
+  options?: Options
+): Workspace[] | null {
+  const root = findRoot(dirname, options);
 
   if (!root) return null;
 
@@ -57,6 +64,7 @@ findWorkspaces.clearCache = () => {
 
 function findWorkspacesRoot(
   dir: string,
+  stopDir: string,
   dirs: string[] = [dir]
 ): WorkspacesRoot | null {
   const cached = cache.root[dir];
@@ -76,9 +84,10 @@ function findWorkspacesRoot(
 
   const next = resolve(dir, "..");
 
+  if (next === stopDir) return save(null);
   if (next === dir) return save(null);
 
-  return findWorkspacesRoot(next, [next, ...dirs]);
+  return findWorkspacesRoot(next, stopDir, [next, ...dirs]);
 }
 
 function findWorkspaceGlobs(dir: string): string[] | null {

@@ -1,6 +1,6 @@
 import assert from "assert";
 import { resolve, join } from "path";
-import { findWorkspaces } from "../index";
+import { findRoot, findWorkspaces } from "../index";
 
 assert.equal(findWorkspaces(), null);
 
@@ -69,16 +69,19 @@ assert.deepEqual(findWorkspaces(join("fixtures", "yarn-npm-with-packages")), [
   },
 ]);
 
-assert.deepEqual(findWorkspaces(join("fixtures", "yarn-npm", "a", "b", "c")), [
-  {
-    location: resolve("fixtures", "yarn-npm", "packages", "a"),
-    package: { name: "@yarn-npm/a", private: true },
-  },
-  {
-    location: resolve("fixtures", "yarn-npm", "packages", "b"),
-    package: { name: "@yarn-npm/b", private: true },
-  },
-]);
+assert.deepEqual(
+  findWorkspaces(join("fixtures", "yarn-npm", "packages", "a", "b")),
+  [
+    {
+      location: resolve("fixtures", "yarn-npm", "packages", "a"),
+      package: { name: "@yarn-npm/a", private: true },
+    },
+    {
+      location: resolve("fixtures", "yarn-npm", "packages", "b"),
+      package: { name: "@yarn-npm/b", private: true },
+    },
+  ]
+);
 
 assert.deepEqual(findWorkspaces(resolve("fixtures", "yarn-npm")), [
   {
