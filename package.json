@@ -5,6 +5,7 @@
   "types": "dist/index.d.js",
   "license": "MIT",
   "repository": "joshuajaco/find-workspaces",
+  "packageManager": "npm@8.1.4",
   "files": [
     "dist/",
     "LICENSE"
