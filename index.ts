@@ -1,4 +1,4 @@
-import { resolve } from "path";
+import { resolve, join, posix, sep } from "path";
 import os from "os";
 import globby from "globby";
 
@@ -43,13 +43,10 @@ export function findWorkspaces(
       absolute: true,
       ignore: ["**/node_modules/**"],
     })
-    .map((location) => {
-      const resolved = resolve(location);
-      return {
-        location: resolved,
-        package: resolveJSONFile(resolved, "package.json"),
-      };
-    })
+    .map((location) => ({
+      location,
+      package: resolveJSONFile(location, "package.json"),
+    }))
     .filter((v): v is Workspace => !!v.package);
 
   cache.workspaces[root.location] = workspaces;
@@ -80,7 +77,7 @@ function findWorkspacesRoot(
 
   const globs = findWorkspaceGlobs(dir);
 
-  if (globs) return save({ location: dir, globs });
+  if (globs) return save({ location: dir.split(sep).join(posix.sep), globs });
 
   const next = resolve(dir, "..");
 
@@ -117,7 +114,7 @@ function findWorkspaceGlobs(dir: string): string[] | null {
 }
 
 function resolveJSONFile(dir: string, file: string) {
-  const filePath = resolve(dir, file);
+  const filePath = join(dir, file);
   try {
     return require(filePath);
   } catch {
