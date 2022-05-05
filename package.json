@@ -2,6 +2,7 @@
   "name": "find-workspaces",
   "version": "0.0.2",
   "main": "dist/index.js",
+  "exports": "./dist/index.js",
   "types": "dist/index.d.js",
   "license": "MIT",
   "repository": "joshuajaco/find-workspaces",
