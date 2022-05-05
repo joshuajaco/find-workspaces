@@ -1,7 +1,7 @@
 import assert from "assert";
-import { join } from "path";
+import { join, resolve } from "path";
 import { posixResolve } from "./posixResolve";
-import { findWorkspaces } from "../index";
+import { createCache, findWorkspaces } from "../index";
 
 assert.equal(findWorkspaces(), null);
 
@@ -104,3 +104,58 @@ assert.deepEqual(findWorkspaces(posixResolve("fixtures", "yarn-npm")), [
     package: { name: "@yarn-npm/b", private: true },
   },
 ]);
+
+const cache = createCache();
+
+assert.deepEqual(
+  findWorkspaces(posixResolve("fixtures", "yarn-npm"), { cache }),
+  [
+    {
+      location: posixResolve("fixtures", "yarn-npm", "packages", "a"),
+      package: { name: "@yarn-npm/a", private: true },
+    },
+    {
+      location: posixResolve("fixtures", "yarn-npm", "packages", "b"),
+      package: { name: "@yarn-npm/b", private: true },
+    },
+  ]
+);
+
+assert.deepEqual(
+  findWorkspaces(posixResolve("fixtures", "yarn-npm"), { cache }),
+  [
+    {
+      location: posixResolve("fixtures", "yarn-npm", "packages", "a"),
+      package: { name: "@yarn-npm/a", private: true },
+    },
+    {
+      location: posixResolve("fixtures", "yarn-npm", "packages", "b"),
+      package: { name: "@yarn-npm/b", private: true },
+    },
+  ]
+);
+
+assert.deepEqual(cache.root, {
+  [resolve("fixtures", "yarn-npm")]: {
+    globs: ["packages/*"],
+    location: posixResolve("fixtures", "yarn-npm"),
+  },
+});
+
+assert.deepEqual(cache.workspaces, {
+  [posixResolve("fixtures", "yarn-npm")]: [
+    {
+      location: posixResolve("fixtures", "yarn-npm", "packages", "a"),
+      package: { name: "@yarn-npm/a", private: true },
+    },
+    {
+      location: posixResolve("fixtures", "yarn-npm", "packages", "b"),
+      package: { name: "@yarn-npm/b", private: true },
+    },
+  ],
+});
+
+cache.clear();
+
+assert.deepEqual(cache.root, {});
+assert.deepEqual(cache.workspaces, {});
