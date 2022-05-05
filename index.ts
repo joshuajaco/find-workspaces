@@ -14,7 +14,7 @@ type Cache<T extends Json> = {
   clear: () => void;
 };
 
-export function createCache<T extends Json>(): Cache<T> {
+export function createWorkspacesCache<T extends Json>(): Cache<T> {
   return {
     root: {},
     workspaces: {},
@@ -27,23 +27,23 @@ export function createCache<T extends Json>(): Cache<T> {
 
 type Options<T extends Json> = { stopDir?: string; cache?: Cache<T> };
 
-export function findRoot<T extends Json>(
+export function findWorkspacesRoot<T extends Json>(
   dirname?: string,
   options: Options<T> = {}
 ) {
   const dir = dirname ? resolve(dirname) : process.cwd();
   const stopDir = options.stopDir ? resolve(options.stopDir) : os.homedir();
-  const cache = options.cache ?? createCache();
-  return findWorkspacesRoot(dir, stopDir, cache);
+  const cache = options.cache ?? createWorkspacesCache();
+  return findRoot(dir, stopDir, cache);
 }
 
 export function findWorkspaces<T extends Json>(
   dirname?: string,
   options: Options<T> = {}
 ): Workspace<T>[] | null {
-  const cache = options.cache ?? createCache<T>();
+  const cache = options.cache ?? createWorkspacesCache<T>();
 
-  const root = findRoot<T>(dirname, { ...options, cache });
+  const root = findWorkspacesRoot<T>(dirname, { ...options, cache });
 
   if (!root) return null;
 
@@ -69,7 +69,7 @@ export function findWorkspaces<T extends Json>(
   return workspaces;
 }
 
-function findWorkspacesRoot<T extends Json>(
+function findRoot<T extends Json>(
   dir: string,
   stopDir: string,
   cache: Cache<T>,
@@ -86,7 +86,7 @@ function findWorkspacesRoot<T extends Json>(
 
   if (cached) return save(cached);
 
-  const globs = findWorkspaceGlobs(dir);
+  const globs = findGlobs(dir);
 
   if (globs) return save({ location: dir.split(sep).join(posix.sep), globs });
 
@@ -95,10 +95,10 @@ function findWorkspacesRoot<T extends Json>(
   if (next === stopDir) return save(null);
   if (next === dir) return save(null);
 
-  return findWorkspacesRoot(next, stopDir, cache, [next, ...dirs]);
+  return findRoot(next, stopDir, cache, [next, ...dirs]);
 }
 
-function findWorkspaceGlobs(dir: string): string[] | null {
+function findGlobs(dir: string): string[] | null {
   const packageJson = resolveJSONFile(dir, "package.json");
 
   if (packageJson) {

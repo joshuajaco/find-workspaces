@@ -1,87 +1,96 @@
 import assert from "assert";
 import { join, resolve } from "path";
 import { posixResolve } from "./posixResolve";
-import { createCache, findRoot } from "../index";
+import { createWorkspacesCache, findWorkspacesRoot } from "../index";
 
-assert.deepStrictEqual(findRoot(join("."), { stopDir: "bla" }), null);
+assert.deepStrictEqual(findWorkspacesRoot(join("."), { stopDir: "bla" }), null);
 
 assert.deepStrictEqual(
-  findRoot(join("fixtures", "bolt", "packages", "a"), {
+  findWorkspacesRoot(join("fixtures", "bolt", "packages", "a"), {
     stopDir: join("fixtures", "bolt", "packages"),
   }),
   null
 );
 
-assert.strictEqual(findRoot(), null);
+assert.strictEqual(findWorkspacesRoot(), null);
 
-assert.deepStrictEqual(findRoot(join("fixtures", "bolt")), {
+assert.deepStrictEqual(findWorkspacesRoot(join("fixtures", "bolt")), {
   location: posixResolve("fixtures", "bolt"),
   globs: ["packages/*"],
 });
 
-assert.deepStrictEqual(findRoot(join("fixtures", "lerna")), {
+assert.deepStrictEqual(findWorkspacesRoot(join("fixtures", "lerna")), {
   location: posixResolve("fixtures", "lerna"),
   globs: ["packages/*"],
 });
 
 assert.strictEqual(
-  findRoot(join("fixtures", "lerna-with-invalid-packages")),
+  findWorkspacesRoot(join("fixtures", "lerna-with-invalid-packages")),
   null
 );
 
-assert.deepStrictEqual(findRoot(join("fixtures", "lerna-with-defaults")), {
-  location: posixResolve("fixtures", "lerna-with-defaults"),
-  globs: ["packages/*"],
-});
+assert.deepStrictEqual(
+  findWorkspacesRoot(join("fixtures", "lerna-with-defaults")),
+  {
+    location: posixResolve("fixtures", "lerna-with-defaults"),
+    globs: ["packages/*"],
+  }
+);
 
 assert.strictEqual(
-  findRoot(join("fixtures", "lerna-with-invalid-workspaces")),
+  findWorkspacesRoot(join("fixtures", "lerna-with-invalid-workspaces")),
   null
 );
 
-assert.deepStrictEqual(findRoot(join("fixtures", "yarn-npm")), {
+assert.deepStrictEqual(findWorkspacesRoot(join("fixtures", "yarn-npm")), {
   location: posixResolve("fixtures", "yarn-npm"),
   globs: ["packages/*"],
 });
 
-assert.deepStrictEqual(findRoot(join("fixtures", "yarn-npm-with-packages")), {
-  location: posixResolve("fixtures", "yarn-npm-with-packages"),
-  globs: ["packages/*"],
-});
+assert.deepStrictEqual(
+  findWorkspacesRoot(join("fixtures", "yarn-npm-with-packages")),
+  {
+    location: posixResolve("fixtures", "yarn-npm-with-packages"),
+    globs: ["packages/*"],
+  }
+);
 
 assert.deepStrictEqual(
-  findRoot(join("fixtures", "yarn-npm", "packages", "a", "b")),
+  findWorkspacesRoot(join("fixtures", "yarn-npm", "packages", "a", "b")),
   {
     location: posixResolve("fixtures", "yarn-npm"),
     globs: ["packages/*"],
   }
 );
 
-assert.deepStrictEqual(findRoot(posixResolve("fixtures", "yarn-npm")), {
-  location: posixResolve("fixtures", "yarn-npm"),
-  globs: ["packages/*"],
-});
+assert.deepStrictEqual(
+  findWorkspacesRoot(posixResolve("fixtures", "yarn-npm")),
+  {
+    location: posixResolve("fixtures", "yarn-npm"),
+    globs: ["packages/*"],
+  }
+);
 
-const cache = createCache();
+const cache = createWorkspacesCache();
 const options = { cache, stopDir: "." };
 
-assert.deepStrictEqual(findRoot(join("fixtures", "bolt"), options), {
+assert.deepStrictEqual(findWorkspacesRoot(join("fixtures", "bolt"), options), {
   location: posixResolve("fixtures", "bolt"),
   globs: ["packages/*"],
 });
 
-assert.deepStrictEqual(findRoot(join("fixtures", "bolt"), options), {
+assert.deepStrictEqual(findWorkspacesRoot(join("fixtures", "bolt"), options), {
   location: posixResolve("fixtures", "bolt"),
   globs: ["packages/*"],
 });
 
 assert.strictEqual(
-  findRoot(join("fixtures", "lerna-with-invalid-packages"), options),
+  findWorkspacesRoot(join("fixtures", "lerna-with-invalid-packages"), options),
   null
 );
 
 assert.strictEqual(
-  findRoot(join("fixtures", "lerna-with-invalid-packages"), options),
+  findWorkspacesRoot(join("fixtures", "lerna-with-invalid-packages"), options),
   null
 );
 
