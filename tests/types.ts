@@ -1,5 +1,5 @@
 import { expectType, TypeEqual } from "ts-expect";
-import { createCache, findWorkspaces, Workspace } from "../index";
+import { createWorkspacesCache, findWorkspaces, Workspace } from "../index";
 
 expectType<Workspace | undefined>(findWorkspaces()?.at(0));
 
@@ -9,12 +9,12 @@ expectType<Workspace<{ foo: "bar" }> | undefined>(
 
 expectType<
   TypeEqual<
-    ReturnType<typeof createCache>["workspaces"][string],
+    ReturnType<typeof createWorkspacesCache>["workspaces"][string],
     Workspace[] | undefined
   >
 >(true);
 
-const cache = createCache<{ foo: "bar" }>();
+const cache = createWorkspacesCache<{ foo: "bar" }>();
 
 expectType<
   TypeEqual<

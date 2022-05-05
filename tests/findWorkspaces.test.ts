@@ -1,7 +1,7 @@
 import assert from "assert";
 import { join, resolve } from "path";
 import { posixResolve } from "./posixResolve";
-import { createCache, findWorkspaces } from "../index";
+import { createWorkspacesCache, findWorkspaces } from "../index";
 
 assert.strictEqual(findWorkspaces(), null);
 
@@ -121,7 +121,7 @@ assert.deepStrictEqual(findWorkspaces(posixResolve("fixtures", "yarn-npm")), [
   },
 ]);
 
-const cache = createCache();
+const cache = createWorkspacesCache();
 
 assert.deepStrictEqual(
   findWorkspaces(posixResolve("fixtures", "yarn-npm"), { cache }),
