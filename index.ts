@@ -8,27 +8,36 @@ export type Workspace = { location: string; package: any };
 type Cache = {
   root: { [dir: string]: WorkspacesRoot | null | undefined };
   workspaces: { [dir: string]: Workspace[] | undefined };
+  clear: () => void;
 };
 
-const cache: Cache = { root: {}, workspaces: {} };
+export function createCache(): Cache {
+  return {
+    root: {},
+    workspaces: {},
+    clear() {
+      this.root = {};
+      this.workspaces = {};
+    },
+  };
+}
 
-type Options = { stopDir?: string };
+type Options = { stopDir?: string; cache?: Cache };
 
 export function findRoot(dirname?: string, options: Options = {}) {
   const dir = dirname ? resolve(dirname) : process.cwd();
   const stopDir = options.stopDir ? resolve(options.stopDir) : os.homedir();
-  return findWorkspacesRoot(dir, stopDir);
+  const cache = options.cache ?? createCache();
+  return findWorkspacesRoot(dir, stopDir, cache);
 }
-
-findRoot.clearCache = () => {
-  cache.root = {};
-};
 
 export function findWorkspaces(
   dirname?: string,
-  options?: Options
+  options: Options = {}
 ): Workspace[] | null {
-  const root = findRoot(dirname, options);
+  const cache = options.cache ?? createCache();
+
+  const root = findRoot(dirname, { ...options, cache });
 
   if (!root) return null;
 
@@ -54,14 +63,10 @@ export function findWorkspaces(
   return workspaces;
 }
 
-findWorkspaces.clearCache = () => {
-  findRoot.clearCache();
-  cache.workspaces = {};
-};
-
 function findWorkspacesRoot(
   dir: string,
   stopDir: string,
+  cache: Cache,
   dirs: string[] = [dir]
 ): WorkspacesRoot | null {
   const cached = cache.root[dir];
@@ -84,7 +89,7 @@ function findWorkspacesRoot(
   if (next === stopDir) return save(null);
   if (next === dir) return save(null);
 
-  return findWorkspacesRoot(next, stopDir, [next, ...dirs]);
+  return findWorkspacesRoot(next, stopDir, cache, [next, ...dirs]);
 }
 
 function findWorkspaceGlobs(dir: string): string[] | null {
