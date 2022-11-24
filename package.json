@@ -7,8 +7,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.js",
   "files": [
-    "dist/",
-    "LICENSE"
+    "dist/"
   ],
   "scripts": {
     "build": "rimraf dist && tsc",
@@ -19,7 +18,8 @@
     "test": "nyc ts-node tests"
   },
   "dependencies": {
-    "globby": "^11.1.0"
+    "globby": "^11.1.0",
+    "type-fest": "^3.2.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",

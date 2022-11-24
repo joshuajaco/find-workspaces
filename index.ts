@@ -1,20 +1,18 @@
 import { resolve, join, posix, sep } from "path";
 import os from "os";
 import globby from "globby";
-
-type Primitive = string | number | boolean | null;
-type Json = { [key: string]: Primitive | Array<Primitive> | Json };
+import { PackageJson } from "type-fest";
 
 export type WorkspacesRoot = { location: string; globs: string[] };
-export type Workspace<T extends Json = Json> = { location: string; package: T };
+export type Workspace = { location: string; package: PackageJson };
 
-type Cache<T extends Json> = {
+type Cache = {
   root: { [dir: string]: WorkspacesRoot | null | undefined };
-  workspaces: { [dir: string]: Workspace<T>[] | undefined };
+  workspaces: { [dir: string]: Workspace[] | undefined };
   clear: () => void;
 };
 
-export function createWorkspacesCache<T extends Json>(): Cache<T> {
+export function createWorkspacesCache(): Cache {
   return {
     root: {},
     workspaces: {},
@@ -25,25 +23,22 @@ export function createWorkspacesCache<T extends Json>(): Cache<T> {
   };
 }
 
-type Options<T extends Json> = { stopDir?: string; cache?: Cache<T> };
+type Options = { stopDir?: string; cache?: Cache };
 
-export function findWorkspacesRoot<T extends Json>(
-  dirname?: string,
-  options: Options<T> = {}
-) {
+export function findWorkspacesRoot(dirname?: string, options: Options = {}) {
   const dir = dirname ? resolve(dirname) : process.cwd();
   const stopDir = options.stopDir ? resolve(options.stopDir) : os.homedir();
   const cache = options.cache ?? createWorkspacesCache();
   return findRoot(dir, stopDir, cache);
 }
 
-export function findWorkspaces<T extends Json>(
+export function findWorkspaces(
   dirname?: string,
-  options: Options<T> = {}
-): Workspace<T>[] | null {
-  const cache = options.cache ?? createWorkspacesCache<T>();
+  options: Options = {}
+): Workspace[] | null {
+  const cache = options.cache ?? createWorkspacesCache();
 
-  const root = findWorkspacesRoot<T>(dirname, { ...options, cache });
+  const root = findWorkspacesRoot(dirname, { ...options, cache });
 
   if (!root) return null;
 
@@ -62,17 +57,17 @@ export function findWorkspaces<T extends Json>(
       location,
       package: resolveJSONFile(location, "package.json"),
     }))
-    .filter((v): v is Workspace<T> => !!v.package);
+    .filter((v): v is Workspace => !!v.package);
 
   cache.workspaces[root.location] = workspaces;
 
   return workspaces;
 }
 
-function findRoot<T extends Json>(
+function findRoot(
   dir: string,
   stopDir: string,
-  cache: Cache<T>,
+  cache: Cache,
   dirs: string[] = [dir]
 ): WorkspacesRoot | null {
   const cached = cache.root[dir];
