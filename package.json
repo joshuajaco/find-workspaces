@@ -1,37 +1,32 @@
 {
   "name": "find-workspaces",
   "version": "0.0.4",
-  "main": "dist/index.js",
-  "exports": "./dist/index.js",
-  "types": "dist/index.d.js",
-  "license": "MIT",
   "repository": "joshuajaco/find-workspaces",
-  "packageManager": "npm@8.9.0",
+  "license": "MIT",
+  "exports": "./dist/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
   "files": [
-    "dist/",
-    "LICENSE"
+    "dist/"
   ],
   "scripts": {
-    "format": "prettier -w --ignore-path .gitignore .",
-    "lint": "prettier -c --ignore-path .gitignore .",
-    "test": "nyc ts-node tests",
     "build": "rimraf dist && tsc",
     "coverage": "mkdir -p coverage && touch coverage/lcov.info && nyc report --reporter=text-lcov > coverage/lcov.info",
-    "prepublishOnly": "npm run build"
+    "format": "prettier -w --ignore-path .gitignore .",
+    "lint": "prettier -c --ignore-path .gitignore .",
+    "prepublishOnly": "npm run build",
+    "test": "nyc ts-node tests"
   },
   "dependencies": {
-    "globby": "^11.1.0"
+    "globby": "^11.1.0",
+    "type-fest": "^3.2.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.31",
+    "@types/node": "^18.11.9",
     "nyc": "^15.1.0",
-    "prettier": "^2.6.2",
+    "prettier": "^2.8.0",
     "rimraf": "^3.0.2",
-    "ts-expect": "^1.3.0",
-    "ts-node": "^10.7.0",
-    "typescript": "^4.6.4"
-  },
-  "engines": {
-    "node": ">= 12.22.0"
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
   }
 }
