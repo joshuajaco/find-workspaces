@@ -94,18 +94,21 @@ assert.strictEqual(
   null
 );
 
-assert.deepStrictEqual(cache.root, {
-  [resolve("fixtures", "bolt")]: {
-    location: posixResolve("fixtures", "bolt"),
-    globs: ["packages/*"],
-  },
-  [resolve("fixtures")]: null,
-  [resolve("fixtures", "lerna-with-invalid-packages")]: null,
-});
+assert.deepStrictEqual(
+  cache.root,
+  new Map([
+    [
+      resolve("fixtures", "bolt"),
+      { location: posixResolve("fixtures", "bolt"), globs: ["packages/*"] },
+    ],
+    [resolve("fixtures"), null],
+    [resolve("fixtures", "lerna-with-invalid-packages"), null],
+  ])
+);
 
-assert.deepStrictEqual(cache.workspaces, {});
+assert.deepStrictEqual(cache.workspaces, new Map());
 
 cache.clear();
 
-assert.deepStrictEqual(cache.root, {});
-assert.deepStrictEqual(cache.workspaces, {});
+assert.deepStrictEqual(cache.root, new Map());
+assert.deepStrictEqual(cache.workspaces, new Map());

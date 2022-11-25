@@ -151,27 +151,36 @@ assert.deepStrictEqual(
   ]
 );
 
-assert.deepStrictEqual(cache.root, {
-  [resolve("fixtures", "yarn-npm")]: {
-    globs: ["packages/*"],
-    location: posixResolve("fixtures", "yarn-npm"),
-  },
-});
+assert.deepStrictEqual(
+  cache.root,
+  new Map([
+    [
+      resolve("fixtures", "yarn-npm"),
+      { globs: ["packages/*"], location: posixResolve("fixtures", "yarn-npm") },
+    ],
+  ])
+);
 
-assert.deepStrictEqual(cache.workspaces, {
-  [posixResolve("fixtures", "yarn-npm")]: [
-    {
-      location: posixResolve("fixtures", "yarn-npm", "packages", "a"),
-      package: { name: "@yarn-npm/a", private: true },
-    },
-    {
-      location: posixResolve("fixtures", "yarn-npm", "packages", "b"),
-      package: { name: "@yarn-npm/b", private: true },
-    },
-  ],
-});
+assert.deepStrictEqual(
+  cache.workspaces,
+  new Map([
+    [
+      posixResolve("fixtures", "yarn-npm"),
+      [
+        {
+          location: posixResolve("fixtures", "yarn-npm", "packages", "a"),
+          package: { name: "@yarn-npm/a", private: true },
+        },
+        {
+          location: posixResolve("fixtures", "yarn-npm", "packages", "b"),
+          package: { name: "@yarn-npm/b", private: true },
+        },
+      ],
+    ],
+  ])
+);
 
 cache.clear();
 
-assert.deepStrictEqual(cache.root, {});
-assert.deepStrictEqual(cache.workspaces, {});
+assert.deepStrictEqual(cache.root, new Map());
+assert.deepStrictEqual(cache.workspaces, new Map());
