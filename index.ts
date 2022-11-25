@@ -1,6 +1,6 @@
 import { resolve, join, posix, sep } from "path";
 import os from "os";
-import globby from "globby";
+import fg from "fast-glob";
 import { PackageJson } from "type-fest";
 
 export type WorkspacesRoot = { location: string; globs: string[] };
@@ -46,7 +46,7 @@ export function findWorkspaces(
 
   if (cached) return cached;
 
-  const workspaces = globby
+  const workspaces = fg
     .sync(root.globs, {
       cwd: root.location,
       onlyDirectories: true,

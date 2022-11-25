@@ -18,7 +18,7 @@
     "test": "nyc ts-node tests"
   },
   "dependencies": {
-    "globby": "^11.1.0",
+    "fast-glob": "^3.2.12",
     "type-fest": "^3.2.0"
   },
   "devDependencies": {
