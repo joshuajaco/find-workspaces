@@ -16,7 +16,7 @@ assert.strictEqual(findWorkspacesRoot(), null);
 
 assert.deepStrictEqual(findWorkspacesRoot(join("fixtures", "bolt")), {
   location: posixResolve("fixtures", "bolt"),
-  globs: ["packages/*"],
+  globs: ["packages/**/*"],
 });
 
 assert.deepStrictEqual(findWorkspacesRoot(join("fixtures", "lerna")), {
@@ -76,12 +76,12 @@ const options = { cache, stopDir: "." };
 
 assert.deepStrictEqual(findWorkspacesRoot(join("fixtures", "bolt"), options), {
   location: posixResolve("fixtures", "bolt"),
-  globs: ["packages/*"],
+  globs: ["packages/**/*"],
 });
 
 assert.deepStrictEqual(findWorkspacesRoot(join("fixtures", "bolt"), options), {
   location: posixResolve("fixtures", "bolt"),
-  globs: ["packages/*"],
+  globs: ["packages/**/*"],
 });
 
 assert.strictEqual(
@@ -99,7 +99,7 @@ assert.deepStrictEqual(
   new Map([
     [
       resolve("fixtures", "bolt"),
-      { location: posixResolve("fixtures", "bolt"), globs: ["packages/*"] },
+      { location: posixResolve("fixtures", "bolt"), globs: ["packages/**/*"] },
     ],
     [resolve("fixtures"), null],
     [resolve("fixtures", "lerna-with-invalid-packages"), null],
