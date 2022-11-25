@@ -61,6 +61,53 @@ assert.strictEqual(
   null
 );
 
+assert.deepStrictEqual(findWorkspaces(join("fixtures", "pnpm")), [
+  {
+    location: posixResolve("fixtures", "pnpm", "packages", "a"),
+    package: { name: "@pnpm/a", private: true },
+  },
+  {
+    location: posixResolve("fixtures", "pnpm", "packages", "b"),
+    package: { name: "@pnpm/b", private: true },
+  },
+  {
+    location: posixResolve("fixtures", "pnpm", "components", "a"),
+    package: { name: "@pnpm/component-a", private: true },
+  },
+  {
+    location: posixResolve("fixtures", "pnpm", "components", "b"),
+    package: { name: "@pnpm/component-b", private: true },
+  },
+  {
+    location: posixResolve(
+      "fixtures",
+      "pnpm",
+      "components",
+      "nested",
+      "component"
+    ),
+    package: { name: "@pnpm/nested-component", private: true },
+  },
+]);
+assert.deepStrictEqual(findWorkspaces(join("fixtures", "pnpm-with-defaults")), [
+  {
+    location: posixResolve("fixtures", "pnpm-with-defaults", "components", "a"),
+    package: { name: "@pnpm/component-a", private: true },
+  },
+  {
+    location: posixResolve("fixtures", "pnpm-with-defaults", "components", "b"),
+    package: { name: "@pnpm/component-b", private: true },
+  },
+  {
+    location: posixResolve("fixtures", "pnpm-with-defaults", "packages", "a"),
+    package: { name: "@pnpm/a", private: true },
+  },
+  {
+    location: posixResolve("fixtures", "pnpm-with-defaults", "packages", "b"),
+    package: { name: "@pnpm/b", private: true },
+  },
+]);
+
 assert.deepStrictEqual(findWorkspaces(join("fixtures", "yarn-npm")), [
   {
     location: posixResolve("fixtures", "yarn-npm", "packages", "a"),
