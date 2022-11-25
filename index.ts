@@ -7,18 +7,18 @@ export type WorkspacesRoot = { location: string; globs: string[] };
 export type Workspace = { location: string; package: PackageJson };
 
 type Cache = {
-  root: { [dir: string]: WorkspacesRoot | null | undefined };
-  workspaces: { [dir: string]: Workspace[] | undefined };
+  root: Map<string, WorkspacesRoot | null>;
+  workspaces: Map<string, Workspace[]>;
   clear: () => void;
 };
 
 export function createWorkspacesCache(): Cache {
   return {
-    root: {},
-    workspaces: {},
+    root: new Map(),
+    workspaces: new Map(),
     clear() {
-      this.root = {};
-      this.workspaces = {};
+      this.root.clear();
+      this.workspaces.clear();
     },
   };
 }
@@ -42,7 +42,7 @@ export function findWorkspaces(
 
   if (!root) return null;
 
-  const cached = cache.workspaces[root.location];
+  const cached = cache.workspaces.get(root.location);
 
   if (cached) return cached;
 
@@ -59,7 +59,7 @@ export function findWorkspaces(
     }))
     .filter((v): v is Workspace => !!v.package);
 
-  cache.workspaces[root.location] = workspaces;
+  cache.workspaces.set(root.location, workspaces);
 
   return workspaces;
 }
@@ -70,10 +70,10 @@ function findRoot(
   cache: Cache,
   dirs: string[] = [dir]
 ): WorkspacesRoot | null {
-  const cached = cache.root[dir];
+  const cached = cache.root.get(dir);
 
   const save = (value: WorkspacesRoot | null) => {
-    dirs.forEach((d) => (cache.root[d] = value));
+    dirs.forEach((d) => cache.root.set(d, value));
     return value;
   };
 
