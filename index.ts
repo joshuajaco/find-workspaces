@@ -1,7 +1,9 @@
 import { resolve, join, posix, sep } from "path";
 import os from "os";
+import { readFileSync } from "fs";
 import fg from "fast-glob";
 import { PackageJson } from "type-fest";
+import { parse as parseYAML } from "yaml";
 
 export type WorkspacesRoot = { location: string; globs: string[] };
 export type Workspace = { location: string; package: PackageJson };
@@ -94,6 +96,19 @@ function findRoot(
 }
 
 function findGlobs(dir: string): string[] | null {
+  const packageJsonGlobs = resolvePackageJsonGlobs(dir);
+  if (packageJsonGlobs) return packageJsonGlobs;
+
+  const lernaGlobs = resolveLernaGlobs(dir);
+  if (lernaGlobs) return lernaGlobs;
+
+  const pnpmGlobs = resolvePnpmGlobs(dir);
+  if (pnpmGlobs) return pnpmGlobs;
+
+  return null;
+}
+
+function resolvePackageJsonGlobs(dir: string): string[] | null {
   const packageJson = resolveJSONFile(dir, "package.json");
 
   if (packageJson) {
@@ -108,6 +123,10 @@ function findGlobs(dir: string): string[] | null {
     }
   }
 
+  return null;
+}
+
+function resolveLernaGlobs(dir: string): string[] | null {
   const lernaJson = resolveJSONFile(dir, "lerna.json");
 
   if (lernaJson) {
@@ -117,6 +136,24 @@ function findGlobs(dir: string): string[] | null {
   }
 
   return null;
+}
+
+function resolvePnpmGlobs(dir: string): string[] | null {
+  const filePath = join(dir, "pnpm-workspace.yaml");
+
+  let pnpmWorkspaceYaml;
+
+  try {
+    pnpmWorkspaceYaml = parseYAML(readFileSync(filePath).toString());
+  } catch {
+    return null;
+  }
+
+  if (pnpmWorkspaceYaml && isStringArray(pnpmWorkspaceYaml.packages)) {
+    return pnpmWorkspaceYaml.packages;
+  }
+
+  return ["**"];
 }
 
 function resolveJSONFile(dir: string, file: string) {
