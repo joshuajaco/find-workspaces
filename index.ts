@@ -30,7 +30,7 @@ type Options = { stopDir?: string; cache?: Cache };
 export function findWorkspacesRoot(dirname?: string, options: Options = {}) {
   const dir = dirname ? resolve(dirname) : process.cwd();
   const stopDir = options.stopDir ? resolve(options.stopDir) : os.homedir();
-  const cache = options.cache ?? createWorkspacesCache();
+  const cache = options.cache;
   return findRoot(dir, stopDir, cache);
 }
 
@@ -38,13 +38,13 @@ export function findWorkspaces(
   dirname?: string,
   options: Options = {}
 ): Workspace[] | null {
-  const cache = options.cache ?? createWorkspacesCache();
+  const cache = options.cache;
 
   const root = findWorkspacesRoot(dirname, { ...options, cache });
 
   if (!root) return null;
 
-  const cached = cache.workspaces.get(root.location);
+  const cached = cache?.workspaces.get(root.location);
 
   if (cached) return cached;
 
@@ -61,7 +61,7 @@ export function findWorkspaces(
     }))
     .filter((v): v is Workspace => !!v.package);
 
-  cache.workspaces.set(root.location, workspaces);
+  cache?.workspaces.set(root.location, workspaces);
 
   return workspaces;
 }
@@ -69,13 +69,13 @@ export function findWorkspaces(
 function findRoot(
   dir: string,
   stopDir: string,
-  cache: Cache,
+  cache?: Cache,
   dirs: string[] = [dir]
 ): WorkspacesRoot | null {
-  const cached = cache.root.get(dir);
+  const cached = cache?.root.get(dir);
 
   const save = (value: WorkspacesRoot | null) => {
-    dirs.forEach((d) => cache.root.set(d, value));
+    if (cache) dirs.forEach((d) => cache.root.set(d, value));
     return value;
   };
 
