@@ -1,6 +1,16 @@
 {
   "name": "find-workspaces",
   "version": "0.0.4",
+  "keywords": [
+    "workspaces",
+    "packages",
+    "monorepo",
+    "yarn",
+    "npm",
+    "pnpm",
+    "lerna",
+    "bolt"
+  ],
   "repository": "joshuajaco/find-workspaces",
   "license": "MIT",
   "exports": "./dist/index.js",
