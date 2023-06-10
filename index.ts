@@ -2,7 +2,7 @@ import { resolve, join, posix, sep } from "path";
 import os from "os";
 import { readFileSync } from "fs";
 import fg from "fast-glob";
-import { PackageJson } from "pkg-types";
+import type { PackageJson } from "pkg-types";
 import { parse as parseYAML } from "yaml";
 
 export type WorkspacesRoot = { location: string; globs: string[] };
