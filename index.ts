@@ -2,11 +2,14 @@ import { resolve, join, posix, sep } from "path";
 import os from "os";
 import { readFileSync } from "fs";
 import fg from "fast-glob";
-import { PackageJson } from "type-fest";
+import { PackageJson } from "pkg-types";
 import { parse as parseYAML } from "yaml";
 
 export type WorkspacesRoot = { location: string; globs: string[] };
-export type Workspace = { location: string; package: PackageJson };
+export type Workspace = {
+  location: string;
+  package: PackageJson & { name: string };
+};
 
 type Cache = {
   root: Map<string, WorkspacesRoot | null>;
@@ -59,7 +62,7 @@ export function findWorkspaces(
       location,
       package: resolveJSONFile(location, "package.json"),
     }))
-    .filter((v): v is Workspace => !!v.package);
+    .filter((v): v is Workspace => !!v.package && !!v.package.name);
 
   cache?.workspaces.set(root.location, workspaces);
 
