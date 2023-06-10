@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "fast-glob": "^3.2.12",
-    "type-fest": "^3.11.1",
+    "pkg-types": "^1.0.3",
     "yaml": "^2.3.1"
   },
   "devDependencies": {
