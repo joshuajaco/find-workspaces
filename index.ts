@@ -66,7 +66,10 @@ export function findWorkspaces(
       location,
       package: resolveJSONFile(location, "package.json"),
     }))
-    .filter((v): v is Workspace => !!v.package && !!v.package.name);
+    .filter(
+      (v): v is Workspace =>
+        isObject(v.package) && typeof v.package.name === "string",
+    );
 
   options.cache?.workspaces.set(root.location, workspaces);
 
@@ -106,22 +109,26 @@ function findGlobs(dir: string): string[] | null {
 
 function resolveLernaGlobs(dir: string): string[] | null {
   const lernaJson = resolveJSONFile(dir, "lerna.json");
+  if (lernaJson === undefined) return null;
 
-  if (lernaJson) {
+  if (isObject(lernaJson)) {
     if (lernaJson.useWorkspaces === true) return null;
     if (!lernaJson.packages) return ["packages/*"];
     if (isStringArray(lernaJson.packages)) return lernaJson.packages;
+    return null;
   }
 
-  return null;
+  return ["packages/*"];
 }
 
 function resolvePnpmGlobs(dir: string): string[] | null {
   const pnpmWorkspaceYaml = resolveYAMLFile(dir, "pnpm-workspace.yaml");
-
   if (pnpmWorkspaceYaml === undefined) return null;
 
-  if (pnpmWorkspaceYaml && isStringArray(pnpmWorkspaceYaml.packages)) {
+  if (
+    isObject(pnpmWorkspaceYaml) &&
+    isStringArray(pnpmWorkspaceYaml.packages)
+  ) {
     return pnpmWorkspaceYaml.packages;
   }
 
@@ -130,16 +137,22 @@ function resolvePnpmGlobs(dir: string): string[] | null {
 
 function resolvePackageJsonGlobs(dir: string): string[] | null {
   const packageJson = resolveJSONFile(dir, "package.json");
+  if (packageJson === undefined) return null;
 
-  if (packageJson) {
+  if (isObject(packageJson)) {
     if (isStringArray(packageJson.workspaces)) return packageJson.workspaces;
 
-    const packages = packageJson.workspaces?.packages;
-    if (isStringArray(packages)) {
-      return packages;
+    if (
+      isObject(packageJson.workspaces) &&
+      isStringArray(packageJson.workspaces.packages)
+    ) {
+      return packageJson.workspaces.packages;
     }
 
-    if (isStringArray(packageJson.bolt?.workspaces)) {
+    if (
+      isObject(packageJson.bolt) &&
+      isStringArray(packageJson.bolt.workspaces)
+    ) {
       return packageJson.bolt.workspaces;
     }
   }
@@ -147,7 +160,17 @@ function resolvePackageJsonGlobs(dir: string): string[] | null {
   return null;
 }
 
-function resolveJSONFile(dir: string, file: string) {
+type JSONValue =
+  | string
+  | number
+  | boolean
+  | null
+  | Array<JSONValue>
+  | JSONObject;
+
+type JSONObject = { [key: string]: JSONValue | undefined };
+
+function resolveJSONFile(dir: string, file: string): JSONValue | undefined {
   const filePath = join(dir, file);
   try {
     return JSON.parse(readFileSync(filePath).toString());
@@ -156,7 +179,7 @@ function resolveJSONFile(dir: string, file: string) {
   }
 }
 
-function resolveYAMLFile(dir: string, file: string) {
+function resolveYAMLFile(dir: string, file: string): JSONValue | undefined {
   const filePath = join(dir, file);
   try {
     return parseYAML(readFileSync(filePath).toString());
@@ -165,7 +188,11 @@ function resolveYAMLFile(dir: string, file: string) {
   }
 }
 
-function isStringArray(value: unknown): value is string[] {
+function isObject(value?: JSONValue): value is JSONObject {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+}
+
+function isStringArray(value?: JSONValue): value is string[] {
   if (!Array.isArray(value)) return false;
   return value.every((item) => typeof item === "string");
 }
