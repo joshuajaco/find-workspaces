@@ -102,7 +102,6 @@ assert.deepStrictEqual(
       { location: posixResolve("fixtures", "bolt"), globs: ["packages/**/*"] },
     ],
     [resolve("fixtures"), null],
-    [resolve("fixtures", "lerna-with-invalid-packages"), null],
   ]),
 );
 
