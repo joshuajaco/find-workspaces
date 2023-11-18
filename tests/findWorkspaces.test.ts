@@ -16,6 +16,35 @@ assert.deepStrictEqual(findWorkspaces(join("fixtures", "bolt")), [
   },
 ]);
 
+assert.deepStrictEqual(
+  findWorkspaces(join("fixtures", "lerna-with-packages")),
+  [
+    {
+      location: posixResolve(
+        "fixtures",
+        "lerna-with-packages",
+        "packages",
+        "a",
+      ),
+      package: { name: "@lerna-with-packages/a", private: true },
+    },
+    {
+      location: posixResolve(
+        "fixtures",
+        "lerna-with-packages",
+        "packages",
+        "b",
+      ),
+      package: { name: "@lerna-with-packages/b", private: true },
+    },
+  ],
+);
+
+assert.strictEqual(
+  findWorkspaces(join("fixtures", "lerna-with-invalid-packages")),
+  null,
+);
+
 assert.deepStrictEqual(findWorkspaces(join("fixtures", "lerna")), [
   {
     location: posixResolve("fixtures", "lerna", "packages", "a"),
@@ -28,42 +57,13 @@ assert.deepStrictEqual(findWorkspaces(join("fixtures", "lerna")), [
 ]);
 
 assert.strictEqual(
-  findWorkspaces(join("fixtures", "lerna-with-invalid-packages")),
-  null,
-);
-
-assert.deepStrictEqual(
-  findWorkspaces(join("fixtures", "lerna-with-defaults")),
-  [
-    {
-      location: posixResolve(
-        "fixtures",
-        "lerna-with-defaults",
-        "packages",
-        "a",
-      ),
-      package: { name: "@lerna-with-defaults/a", private: true },
-    },
-    {
-      location: posixResolve(
-        "fixtures",
-        "lerna-with-defaults",
-        "packages",
-        "b",
-      ),
-      package: { name: "@lerna-with-defaults/b", private: true },
-    },
-  ],
-);
-
-assert.strictEqual(
   findWorkspaces(join("fixtures", "lerna-with-invalid-workspaces")),
   null,
 );
 
 assert.deepStrictEqual(
   findWorkspaces(join("fixtures", "lerna-with-invalid-lerna-json")),
-  [],
+  null,
 );
 
 assert.strictEqual(
@@ -186,53 +186,67 @@ assert.deepStrictEqual(findWorkspaces(posixResolve("fixtures", "yarn-npm")), [
 const cache = createWorkspacesCache();
 
 assert.deepStrictEqual(
-  findWorkspaces(posixResolve("fixtures", "lerna", "foo"), { cache }),
-  [
-    {
-      location: posixResolve("fixtures", "lerna", "packages", "a"),
-      package: { name: "@lerna/a", private: true },
-    },
-    {
-      location: posixResolve("fixtures", "lerna", "packages", "b"),
-      package: { name: "@lerna/b", private: true },
-    },
-  ],
-);
-
-assert.deepStrictEqual(
-  findWorkspaces(posixResolve("fixtures", "lerna", "bar"), { cache }),
-  [
-    {
-      location: posixResolve("fixtures", "lerna", "packages", "a"),
-      package: { name: "@lerna/a", private: true },
-    },
-    {
-      location: posixResolve("fixtures", "lerna", "packages", "b"),
-      package: { name: "@lerna/b", private: true },
-    },
-  ],
-);
-
-assert.deepStrictEqual(
-  findWorkspaces(posixResolve("fixtures", "lerna-with-defaults"), { cache }),
+  findWorkspaces(posixResolve("fixtures", "lerna-with-packages", "foo"), {
+    cache,
+  }),
   [
     {
       location: posixResolve(
         "fixtures",
-        "lerna-with-defaults",
+        "lerna-with-packages",
         "packages",
         "a",
       ),
-      package: { name: "@lerna-with-defaults/a", private: true },
+      package: { name: "@lerna-with-packages/a", private: true },
     },
     {
       location: posixResolve(
         "fixtures",
-        "lerna-with-defaults",
+        "lerna-with-packages",
         "packages",
         "b",
       ),
-      package: { name: "@lerna-with-defaults/b", private: true },
+      package: { name: "@lerna-with-packages/b", private: true },
+    },
+  ],
+);
+
+assert.deepStrictEqual(
+  findWorkspaces(posixResolve("fixtures", "lerna-with-packages", "bar"), {
+    cache,
+  }),
+  [
+    {
+      location: posixResolve(
+        "fixtures",
+        "lerna-with-packages",
+        "packages",
+        "a",
+      ),
+      package: { name: "@lerna-with-packages/a", private: true },
+    },
+    {
+      location: posixResolve(
+        "fixtures",
+        "lerna-with-packages",
+        "packages",
+        "b",
+      ),
+      package: { name: "@lerna-with-packages/b", private: true },
+    },
+  ],
+);
+
+assert.deepStrictEqual(
+  findWorkspaces(posixResolve("fixtures", "lerna"), { cache }),
+  [
+    {
+      location: posixResolve("fixtures", "lerna", "packages", "a"),
+      package: { name: "@lerna/a", private: true },
+    },
+    {
+      location: posixResolve("fixtures", "lerna", "packages", "b"),
+      package: { name: "@lerna/b", private: true },
     },
   ],
 );
@@ -241,14 +255,17 @@ assert.deepStrictEqual(
   cache.root,
   new Map([
     [
-      resolve("fixtures", "lerna"),
-      { globs: ["packages/*"], location: posixResolve("fixtures", "lerna") },
-    ],
-    [
-      resolve("fixtures", "lerna-with-defaults"),
+      resolve("fixtures", "lerna-with-packages"),
       {
         globs: ["packages/*"],
-        location: posixResolve("fixtures", "lerna-with-defaults"),
+        location: posixResolve("fixtures", "lerna-with-packages"),
+      },
+    ],
+    [
+      resolve("fixtures", "lerna"),
+      {
+        globs: ["packages/*"],
+        location: posixResolve("fixtures", "lerna"),
       },
     ],
   ]),
@@ -257,6 +274,29 @@ assert.deepStrictEqual(
 assert.deepStrictEqual(
   cache.workspaces,
   new Map([
+    [
+      posixResolve("fixtures", "lerna-with-packages"),
+      [
+        {
+          location: posixResolve(
+            "fixtures",
+            "lerna-with-packages",
+            "packages",
+            "a",
+          ),
+          package: { name: "@lerna-with-packages/a", private: true },
+        },
+        {
+          location: posixResolve(
+            "fixtures",
+            "lerna-with-packages",
+            "packages",
+            "b",
+          ),
+          package: { name: "@lerna-with-packages/b", private: true },
+        },
+      ],
+    ],
     [
       posixResolve("fixtures", "lerna"),
       [
@@ -267,29 +307,6 @@ assert.deepStrictEqual(
         {
           location: posixResolve("fixtures", "lerna", "packages", "b"),
           package: { name: "@lerna/b", private: true },
-        },
-      ],
-    ],
-    [
-      posixResolve("fixtures", "lerna-with-defaults"),
-      [
-        {
-          location: posixResolve(
-            "fixtures",
-            "lerna-with-defaults",
-            "packages",
-            "a",
-          ),
-          package: { name: "@lerna-with-defaults/a", private: true },
-        },
-        {
-          location: posixResolve(
-            "fixtures",
-            "lerna-with-defaults",
-            "packages",
-            "b",
-          ),
-          package: { name: "@lerna-with-defaults/b", private: true },
         },
       ],
     ],

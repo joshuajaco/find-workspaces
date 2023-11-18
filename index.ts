@@ -111,14 +111,11 @@ function resolveLernaGlobs(dir: string): string[] | null {
   const lernaJson = resolveJSONFile(dir, "lerna.json");
   if (lernaJson === undefined) return null;
 
-  if (isObject(lernaJson)) {
-    if (lernaJson.useWorkspaces === true) return null;
-    if (!lernaJson.packages) return ["packages/*"];
-    if (isStringArray(lernaJson.packages)) return lernaJson.packages;
-    return null;
+  if (isObject(lernaJson) && isStringArray(lernaJson.packages)) {
+    return lernaJson.packages;
   }
 
-  return ["packages/*"];
+  return null;
 }
 
 function resolvePnpmGlobs(dir: string): string[] | null {
