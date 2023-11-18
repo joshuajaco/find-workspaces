@@ -1,7 +1,7 @@
 import assert from "assert";
 import { join, resolve } from "path";
 import { posixResolve } from "./posixResolve";
-import { createWorkspacesCache, findWorkspaces } from "../index";
+import { createWorkspacesCache, findWorkspaces } from "../src";
 
 assert.strictEqual(findWorkspaces(), null);
 

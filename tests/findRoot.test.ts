@@ -1,7 +1,7 @@
 import assert from "assert";
 import { join, resolve } from "path";
 import { posixResolve } from "./posixResolve";
-import { createWorkspacesCache, findWorkspacesRoot } from "../index";
+import { createWorkspacesCache, findWorkspacesRoot } from "../src";
 
 assert.deepStrictEqual(findWorkspacesRoot(join("."), { stopDir: "bla" }), null);
 
