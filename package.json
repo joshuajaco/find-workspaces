@@ -24,11 +24,10 @@
   ],
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "coverage": "mkdir -p coverage && touch coverage/lcov.info && nyc report --reporter=text-lcov > coverage/lcov.info",
     "format": "prettier -w .",
     "lint": "prettier -c .",
     "prepublishOnly": "npm run build",
-    "test": "nyc ts-node tests"
+    "test": "nyc -r=lcov -r=text ts-node tests"
   },
   "dependencies": {
     "fast-glob": "^3.3.2",
