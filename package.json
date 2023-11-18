@@ -20,7 +20,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.js",
   "files": [
-    "dist/"
+    "dist/",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "rm -rf dist && tsc",
