@@ -39,7 +39,7 @@ export function findWorkspacesRoot(dirname?: string, options: Options = {}) {
 
 export function findWorkspaces(
   dirname?: string,
-  options: Options = {}
+  options: Options = {},
 ): Workspace[] | null {
   const cache = options.cache;
 
@@ -73,7 +73,7 @@ function findRoot(
   dir: string,
   stopDir: string,
   cache?: Cache,
-  dirs: string[] = [dir]
+  dirs: string[] = [dir],
 ): WorkspacesRoot | null {
   const cached = cache?.root.get(dir);
 
