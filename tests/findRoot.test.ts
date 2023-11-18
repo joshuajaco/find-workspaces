@@ -1,5 +1,5 @@
-import assert from "assert";
-import { join, resolve } from "path";
+import assert from "node:assert";
+import { join, resolve } from "node:path";
 import { posixResolve } from "./posixResolve";
 import { createWorkspacesCache, findWorkspacesRoot } from "../src";
 

@@ -1,6 +1,6 @@
-import { resolve, join, posix, sep } from "path";
-import { homedir } from "os";
-import { readFileSync } from "fs";
+import { resolve, join, posix, sep } from "node:path";
+import { homedir } from "node:os";
+import { readFileSync } from "node:fs";
 import { sync as glob } from "fast-glob";
 import type { PackageJson } from "pkg-types";
 import { parse as parseYAML } from "yaml";
