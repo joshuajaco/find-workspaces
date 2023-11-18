@@ -1,4 +1,7 @@
 {
   "name": "lerna",
-  "private": true
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
 }
