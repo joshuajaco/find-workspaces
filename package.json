@@ -11,7 +11,10 @@
     "lerna",
     "bolt"
   ],
-  "repository": "joshuajaco/find-workspaces",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshuajaco/find-workspaces.git"
+  },
   "license": "MIT",
   "exports": "./dist/index.js",
   "main": "dist/index.js",
