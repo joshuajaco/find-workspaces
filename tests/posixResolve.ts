@@ -1,6 +1,4 @@
-import { posix, resolve, sep } from "path";
+import { posix, resolve, sep } from "node:path";
 
-export const posixResolve = (...segments: string[]) =>
-  resolve(...segments)
-    .split(sep)
-    .join(posix.sep);
+export const posixResolve = (path: string) =>
+  resolve(path).split(sep).join(posix.sep);

@@ -1,6 +1,6 @@
-import { resolve, join, posix, sep } from "path";
-import { homedir } from "os";
-import { readFileSync } from "fs";
+import { resolve, join, posix, sep } from "node:path";
+import { homedir } from "node:os";
+import { readFileSync } from "node:fs";
 import { sync as glob } from "fast-glob";
 import type { PackageJson } from "pkg-types";
 import { parse as parseYAML } from "yaml";
@@ -37,7 +37,7 @@ export function findWorkspacesRoot(dirname?: string, options: Options = {}) {
 
   if (cache) {
     for (const [key, value] of cache.root.entries()) {
-      if (dir.startsWith(key + sep)) return value;
+      if ((dir + sep).startsWith(key + sep)) return value;
     }
   }
 

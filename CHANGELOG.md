@@ -1,3 +1,5 @@
+# Changelog
+
 ## [v0.2.0] - 2023-06-10
 
 - Now ignores workspaces that do not have a `name` property defined in their `package.json` file

@@ -48,7 +48,7 @@ Returns [`Workspace[]`](#workspace) or `null` if `dirname` is not inside a monor
 Type: `string | undefined`  
 Default: `process.cwd()`
 
-The directory to start looking for the monorepo root.
+The directory to start searching for the monorepo root.
 
 #### Options
 
@@ -67,7 +67,7 @@ Returns [`WorkspacesRoot`](#workspaceroot) or `null` if `dirname` is not inside 
 Type: `string | undefined`  
 Default: `process.cwd()`
 
-The directory to start looking for the monorepo root.
+The directory to start searching for the monorepo root.
 
 #### Options
 
@@ -87,7 +87,8 @@ Returns a cache which can be provided to [`findWorkspaces`](#findworkspacesdirna
 Type: `string | undefined`  
 Default: `os.homedir()`
 
-The directory to stop looking for the monorepo root.
+The directory to stop searching for the monorepo root.  
+The provided directory will not be included in the search.
 
 #### cache
 
