@@ -129,4 +129,25 @@ describe("findWorkspacesRoot", () => {
     assert.deepStrictEqual(cache.root, new Map());
     assert.deepStrictEqual(cache.workspaces, new Map());
   });
+
+  it("returns root from cache", () => {
+    const cache = createWorkspacesCache();
+    const options = { cache, stopDir: "." };
+
+    const root = {
+      location: posixResolve("fixtures", "bolt"),
+      globs: ["packages/**/*"],
+    };
+
+    cache.root.set(resolve("fixtures", "bolt"), root);
+
+    assert.strictEqual(
+      findWorkspacesRoot(join("fixtures", "bolt", "foo"), options),
+      root,
+    );
+    assert.strictEqual(
+      findWorkspacesRoot(join("fixtures", "bolt"), options),
+      root,
+    );
+  });
 });

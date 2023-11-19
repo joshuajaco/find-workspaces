@@ -37,7 +37,7 @@ export function findWorkspacesRoot(dirname?: string, options: Options = {}) {
 
   if (cache) {
     for (const [key, value] of cache.root.entries()) {
-      if (dir.startsWith(key + sep)) return value;
+      if ((dir + sep).startsWith(key + sep)) return value;
     }
   }
 

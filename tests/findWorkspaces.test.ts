@@ -217,6 +217,20 @@ describe("findWorkspaces", () => {
     const cache = createWorkspacesCache();
 
     assert.deepStrictEqual(
+      findWorkspaces(posixResolve("fixtures", "lerna"), { cache }),
+      [
+        {
+          location: posixResolve("fixtures", "lerna", "packages", "a"),
+          package: { name: "@lerna/a", private: true },
+        },
+        {
+          location: posixResolve("fixtures", "lerna", "packages", "b"),
+          package: { name: "@lerna/b", private: true },
+        },
+      ],
+    );
+
+    assert.deepStrictEqual(
       findWorkspaces(posixResolve("fixtures", "lerna-with-packages", "foo"), {
         cache,
       }),
@@ -264,20 +278,6 @@ describe("findWorkspaces", () => {
             "b",
           ),
           package: { name: "@lerna-with-packages/b", private: true },
-        },
-      ],
-    );
-
-    assert.deepStrictEqual(
-      findWorkspaces(posixResolve("fixtures", "lerna"), { cache }),
-      [
-        {
-          location: posixResolve("fixtures", "lerna", "packages", "a"),
-          package: { name: "@lerna/a", private: true },
-        },
-        {
-          location: posixResolve("fixtures", "lerna", "packages", "b"),
-          package: { name: "@lerna/b", private: true },
         },
       ],
     );
