@@ -1,9 +1,9 @@
 {
-  "include": ["src/**/*.ts"],
+  "include": ["**/*.ts"],
+  "exclude": ["dist"],
   "compilerOptions": {
-    "outDir": "dist",
-    "declaration": true,
     "lib": ["ES2019"],
+    "noEmit": true,
     "module": "CommonJS",
     "target": "ES2019",
     "strict": true,

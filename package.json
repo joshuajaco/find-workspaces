@@ -24,28 +24,29 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "format": "prettier -w .",
     "format:check": "prettier -c .",
-    "lint": "eslint --ignore-path .gitignore --max-warnings 0 .",
+    "lint": "eslint  --max-warnings 0 .",
     "prepublishOnly": "pnpm build",
     "test": "nyc -r=lcov -r=text node --trace-warnings -r ts-node/register --test \"**/*.test.ts\""
   },
   "dependencies": {
-    "fast-glob": "^3.3.2",
-    "pkg-types": "^1.2.0",
-    "yaml": "^2.5.0"
+    "fast-glob": "^3.3.3",
+    "pkg-types": "^2.1.0",
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
-    "@types/node": "^20.16.2",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "nyc": "^17.0.0",
-    "prettier": "^3.3.3",
+    "@eslint/js": "^9.27.0",
+    "@types/node": "^20.17.47",
+    "eslint": "^9.26.0",
+    "eslint-config-prettier": "^10.1.5",
+    "jiti": "^2.4.2",
+    "nyc": "^17.1.0",
+    "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.1"
   },
-  "packageManager": "pnpm@9.9.0"
+  "packageManager": "pnpm@10.11.0"
 }
