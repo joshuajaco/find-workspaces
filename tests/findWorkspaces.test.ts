@@ -74,6 +74,16 @@ describe("findWorkspaces", () => {
         location: posixResolve("fixtures/pnpm-with-defaults/packages/b"),
         package: { name: "@pnpm/b", private: true },
       },
+      {
+        location: posixResolve("fixtures/pnpm-with-defaults/packages/outer"),
+        package: { name: "@pnpm/outer", private: true },
+      },
+      {
+        location: posixResolve(
+          "fixtures/pnpm-with-defaults/packages/outer/inner",
+        ),
+        package: { name: "@pnpm/inner", private: true },
+      },
     ]);
   });
 
